@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="local-token" content="__LOCAL_TOKEN__">
+<meta name="description" content="本地多模型文件接力工作台：任务会话、模型分配、四条事件泳道与可恢复的交付文件。">
+<title>yuki雪站 · 多模型工作空间</title>
+<link rel="stylesheet" href="/live.css"><script defer src="/flow.js"></script><script defer src="/live.js"></script>
+</head>
+<body class="live-workbench">
+<a class="skip-link" href="#conversation">跳转到任务会话</a>
+<header class="topbar">
+  <a class="brand" href="/"><span class="brandmark">雪</span><strong>yuki雪站</strong><span>多任务线 · 会话过程</span></a>
+  <nav id="modelTabs" class="model-tabs" aria-label="模型会话"></nav>
+  <div class="top-actions"><a href="/studio" class="text-button">项目协作 ↗</a><span id="connectionBadge">本地记录</span><button id="retryFailed" class="text-button" hidden>补跑未完成</button><button id="start" class="primary">回放完整流程</button><button id="replay" class="icon-button" title="回放真实事件">▷</button><select id="replaySpeed" aria-label="回放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="1.5">1.5×</option><option value="2">2×</option><option value="4">4×</option><option value="8">8×</option></select></div>
+</header>
+<main class="workspace">
+  <aside class="sidebar" aria-label="任务会话列表">
+    <div class="sidebar-search"><input id="projectSearch" type="search" placeholder="搜索任务、模型…" aria-label="搜索任务或模型"><button id="manageProjects" class="icon-button" aria-label="新建本地项目">＋</button></div>
+    <label class="run-picker"><span>工作空间</span><select id="runSelect" aria-label="选择演示记录"></select></label>
+    <div class="workspace-name"><span id="workspaceName">工作空间</span><span id="progress">0 / 8</span></div>
+    <div id="projectList" class="project-list"></div>
+    <div class="sidebar-links"><button id="workspaceLink">文件与版本 <span>↗</span></button><button id="checkpoint">保存检查点 <span>⌘</span></button><button id="export" disabled>导出交付包 <span>↗</span></button></div>
+    <div class="sidebar-budget"><div><span id="budgetLabel">任务调用</span><span id="budgetLimit"></span></div><div class="budget-track"><i id="budgetBar"></i></div><p id="budgetText">读取记录…</p><small id="budgetHint">实际用量以接口回执为准</small><button id="forget" class="quiet">清除会话密钥</button></div>
+    <div class="sidebar-bottom"><i class="status-dot"></i><span>文件保存在这台电脑</span></div>
+  </aside>
+  <section class="main-panel" aria-label="模型接力与任务会话">
+    <div class="relay-heading"><h1>任务接力</h1><span>独立会话 · 文件交接</span><span id="planBadge" class="plan-badge">主模型规划</span><button id="configure" class="text-button">分配任务 ↗</button></div>
+    <div id="models" class="relay-matrix" aria-label="按任务分类的模型选择器"></div>
+    <div class="context-bar"><div><span id="contextLane" class="lane-tag">全部泳道</span><b id="taskTitle">星轨发布包</b></div><button id="taskSettings" class="context-path" title="查看任务配置"><span id="workingPath">workspace/startrail</span> ⌄</button></div>
+    <div class="conversation-toolbar"><div class="tabs"><button id="stageEvents" class="selected">任务会话</button><button id="allEvents">全部泳道</button></div><span id="eventCount">读取事件…</span><button id="viewArtifacts" class="text-button">交付文件 <span id="artifactCount">0</span></button></div>
+    <div id="conversation" class="conversation" tabindex="0"><div id="feed" class="feed" aria-live="off"></div></div>
+    <div class="composer-wrap">
+      <div id="attachmentRef" class="attachment-ref" hidden></div>
+      <form id="noteForm" class="composer"><label class="sr-only" for="noteText">给任务补充说明</label><textarea id="noteText" rows="2" maxlength="10000" placeholder="给当前任务补充说明，或引用文件…"></textarea><div class="composer-bottom"><div><span class="local-mode"><i class="status-dot"></i>本地说明</span><button id="citeFile" type="button" class="text-button">▤ 引用文件</button><button id="handoffFile" type="button" class="text-button">◇ 交接清单</button></div><button id="sendNote" type="submit" class="send-button" aria-label="保存本地任务说明" title="保存说明 · 不调用模型">↑</button></div></form>
+      <div class="composer-caption"><span id="runStatus">读取执行状态</span><span id="noteStatus">说明保存到任务文件</span><button id="stop" class="text-button" hidden>停止后续调用</button></div>
+    </div>
+    <div class="recent-bar"><span>RECENTLY HERE</span><div id="recentModels"></div><span id="revisionNote">已保存 · 本地记录</span></div>
+  </section>
+  <aside class="tree-panel" aria-label="工作树泳道">
+    <div class="tree-title"><h2>工作树 · 泳道</h2><span>4 条任务线 <i>·</i> 精细视图</span></div>
+    <div class="tree-controls"><div class="tabs"><button id="fullTree" class="selected">全部泳道</button><button id="focusTree">选中分支</button></div><button id="motionOnce" class="text-button">流星演示 ↗</button></div>
+    <div id="laneHeaders" class="lane-headers"></div>
+    <div class="graph-status"><span id="motionStatus">事件轨迹</span><button id="exitReplay" class="text-button" hidden>退出回放</button><span id="elapsed">00:00</span></div>
+    <div class="graph-scroll" id="graphScroll"><svg id="tree" viewBox="0 0 440 640" role="group" aria-label="可点击的工作流事件图"></svg></div>
+    <div id="graphLegend" class="graph-legend"></div>
+    <div id="nodeDetail" class="node-detail"></div>
+  </aside>
+</main>
+<footer class="app-footer"><span><i class="status-dot"></i><span id="runLabel">本地记录</span> <span class="muted" id="projectFoot">· 本地任务</span></span><span id="runDescription">真实事件 · 可免费回放</span></footer>
+<svg id="meteors" aria-hidden="true"></svg><div id="toast" role="status"></div>
+<dialog id="artifactDialog"><div class="dialog-title"><div><span class="eyebrow">当前版本中的真实文件</span><h2 id="artifactTitle"></h2></div><button id="closeArtifact" class="icon-button" aria-label="关闭文件预览">×</button></div><div id="artifactContent"></div><div class="dialog-foot"><a id="downloadArtifact">下载原文件 ↗</a><span>来自本地工作区</span></div></dialog>
+<dialog id="settingsDialog"><form id="settingsForm"><div class="dialog-title"><div><span class="eyebrow">任务分配</span><h2 id="settingsTitle">任务配置</h2></div><button type="button" id="closeSettings" class="icon-button" aria-label="关闭任务配置">×</button></div><div class="settings-body"><p id="recordedModel"></p><label for="modelSelect">下次执行使用的模型</label><select id="modelSelect"></select><label for="laneSelect">任务所在泳道</label><select id="laneSelect"></select><div class="dependency-box"><span>接收文件</span><div id="dependencyList"></div></div><p class="settings-note">模型选择用于下次执行。当前回放沿用真实记录；已规划的分支关系会保留。</p></div><div class="dialog-foot"><span id="settingsFeedback" role="status"></span><button class="primary" type="submit">保存分配</button></div></form></dialog>
+</body></html>

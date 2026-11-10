@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="local-token" content="__LOCAL_TOKEN__">
+  <title>yuki雪站 · 文件接力工作台</title>
+  <link rel="stylesheet" href="/style.css"><script defer src="/motion.js"></script><script defer src="/app.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brandmark">雪</span><strong>yuki雪站</strong><span class="edition">LOCAL LAB</span></div>
+  <div class="top-middle"><span class="live-dot"></span> 本地文件接力工作台 <span class="divider">/</span><span class="muted">研究复刻版 · 0.1</span></div>
+  <nav><a href="/studio">项目协作 ↗</a><span class="mode-pill">模型未接入 · 本地演示</span></nav>
+</header>
+<main class="workspace">
+  <aside class="sidebar">
+    <div class="sidebar-top"><span class="eyebrow">工作空间</span><button id="newProject" class="icon-button" aria-label="新建项目">＋</button></div>
+    <input id="search" type="search" placeholder="搜索项目…" aria-label="搜索项目">
+    <div id="projects" class="project-list"></div>
+    <div class="sidebar-bottom"><span class="live-dot"></span><div><b>文件保存在这台电脑</b><p>每次操作自动保存独立版本</p></div></div>
+  </aside>
+  <section class="main-panel">
+    <div class="project-heading"><div><span class="eyebrow" id="projectMeta">WORKSPACE</span><h1 id="projectTitle">载入工作区…</h1></div><div class="toolbar"><button id="checkpoint">保存检查点</button><button id="export">导出交付包 ↗</button></div></div>
+    <div class="workflow" id="workflow" aria-label="任务步骤"></div>
+    <section class="task-panel">
+      <div class="task-top"><span id="activeStatus" class="tag">当前步骤</span><span class="muted small" id="session"></span></div>
+      <div class="task-title"><h2 id="stepTitle"></h2><select id="model" aria-label="当前步骤执行器"><option>豆包</option><option>Grok</option><option>Claude</option><option>Codex</option><option>自定义执行器</option></select></div>
+      <p id="goal"></p>
+      <div class="working-folder"><span>工作区</span><code id="cwd" title=""></code></div>
+      <div class="task-actions"><div><button id="upload">＋ 导入文件</button><button id="files">文件与交接包 <span id="fileCount"></span></button></div><button class="primary" id="advance">执行本地步骤 →</button></div>
+      <p class="demo-note">步骤程序只校验文件、生成示例产物；文件保存、交接与回滚真实执行。</p>
+      <input type="file" id="fileUpload" hidden multiple>
+    </section>
+    <div class="feed-header"><div><h2>执行记录</h2><span id="eventCount" class="muted small"></span></div><div class="tabs"><button id="eventsTab" class="selected">全部事件</button><button id="versionsTab">历史版本</button></div></div>
+    <div id="feed" class="feed" aria-live="polite"></div>
+    <footer class="main-footer"><span id="revision"></span><span>独立会话 <span class="footer-arrow">→</span> 文件交接 <span class="footer-arrow">→</span> 可恢复版本</span></footer>
+  </section>
+  <aside class="tree-panel">
+    <div class="tree-title"><div><span class="eyebrow">可追溯的工作流</span><h2>工作树 · 泳道</h2></div><span class="tree-badge" id="laneCount"></span></div>
+    <div class="tree-controls"><div class="tabs"><button id="allLanes" class="selected">全部项目</button><button id="focusLane">当前项目</button></div><span class="muted small">点选节点查看</span></div>
+    <div class="motion-controls"><div><button id="motionDemo" aria-pressed="false">▷ 连续动效预览</button><button id="motionOnce">单次</button></div><span id="motionLabel">事件触发 · 可单独预览</span></div>
+    <div id="laneHeaders" class="lane-headers"></div>
+    <div class="graph-scroll"><svg id="graph" role="group" aria-label="可点击的工作流事件图"></svg><div class="graph-empty" id="graphEmpty"></div></div>
+    <div class="graph-legend"><span>● 保存</span><span>◆ 交接</span><span>◎ 完成</span><span>↶ 恢复</span></div>
+    <div id="nodeDetail" class="node-detail"><span class="eyebrow">节点详情</span><h3>每一次交接，都有来处</h3><p>点击上方节点，查看记录和产物，或恢复到对应版本。</p></div>
+  </aside>
+</main>
+<div id="toast" role="status" aria-live="polite"></div>
+<dialog id="fileDialog" class="file-dialog">
+  <div class="dialog-heading"><div><span class="eyebrow">当前版本中的真实文件</span><h2>文件与交接包</h2></div><button class="icon-button close-dialog" aria-label="关闭文件窗口">×</button></div>
+  <div class="file-body"><div id="fileList" class="file-list"></div><div class="editor-panel"><div class="editor-header"><code id="fileName">选择一个文件</code><a id="downloadFile" class="button" hidden>下载</a></div><div id="fileMeta" class="file-meta"></div><textarea id="editor" spellcheck="false" aria-label="文件内容"></textarea><div id="binaryNotice" hidden>此文件为二进制文件，或超过 1 MB 文本预览限制。可下载查看；交接会保留原始字节。</div><div class="editor-footer"><span class="muted small">保存会生成新版本；其他历史版本继续保留。</span><button id="saveFile" class="primary" disabled>保存新版本</button></div></div></div>
+</dialog>
+<dialog id="newDialog"><form id="newForm"><div class="dialog-heading"><h2>新建工作空间</h2><button type="button" class="icon-button close-dialog" aria-label="关闭">×</button></div><label>项目名称<input name="title" required maxlength="80" placeholder="例如：产品视频复刻"></label><label>交付目标<textarea name="goal" rows="4" maxlength="5000" placeholder="写下希望交给下一阶段继续处理的任务目标"></textarea></label><p class="muted small">自动创建采集、分析、方案、交付四个步骤。</p><button class="primary" type="submit">创建本地项目</button></form></dialog>
+<dialog id="snapshotDialog"><form id="snapshotForm"><div class="dialog-heading"><h2>保存检查点</h2><button type="button" class="icon-button close-dialog" aria-label="关闭">×</button></div><label>版本名称<input name="name" required maxlength="100" placeholder="例如：方案确认，可开始制作"></label><p class="muted small">工作区文件与任务状态将一起保存。</p><button class="primary" type="submit">保存检查点</button></form></dialog>
+</body></html>
