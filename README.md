@@ -133,6 +133,10 @@ node --test test_studio_business_ui.js test_studio_visual.js test_flow.js test_s
 
 完整可选 MCP 集成测试需要 Node 与对应依赖，桌面构建需要 macOS、Xcode 命令行工具和固定版本 Python 运行时。关于测试结果的范围、可选依赖与源码快照差异，请阅读[开发指南](docs/GETTING_STARTED.md)。
 
+## 项目更新
+
+维护者已设置每三天从本机正式版本同步源码与公开文档到 GitHub。同步会核对源码与桌面版、公开文件范围和远端修改；没有变化时不产生空提交。任务依赖维护者的电脑和 Codex 桌面应用运行，离线时不会声称已经更新。
+
 ## 许可证与致谢
 
 项目采用 [MIT License](LICENSE)。模型图标、可选桥接依赖与 Python 运行时保留各自的来源和许可证，详见 [第三方来源](docs/THIRD_PARTY.md)。感谢 [Lancer](https://github.com/raylee-ai/lancer) 与 [DeepSeek Super-agent 原型](https://github.com/deepseek-ai/dsh-superagent-prototype) 的公开工作。
